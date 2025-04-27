@@ -402,3 +402,4 @@ FodyWeavers.xsd
 # Tệp migration tự động nếu không cần
 Migrations/*.designer.cs
 MrKatsuWebAPI/appsettings.json
+*.json

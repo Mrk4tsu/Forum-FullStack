@@ -40,5 +40,18 @@ namespace MrKatsuWebAPI.Controllers
 
             return BadRequest(result.Errors);
         }
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginModel model)
+        {
+            var result = await _signInManager.PasswordSignInAsync(model.Username, model.Password, false, false);
+            if (result.Succeeded)
+            {
+                var user = await _userManager.FindByNameAsync(model.Username);
+                var token = _tokenService.GenerateJwtToken(user);
+                return Ok(new { Token = token });
+            }
+
+            return Unauthorized(new { Message = "Invalid login attempt" });
+        }
     }
 }

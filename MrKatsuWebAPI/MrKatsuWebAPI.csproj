@@ -12,4 +12,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MrKatsuWebAPI.Application\MrKatsuWebAPI.Application.csproj" />
+    <ProjectReference Include="..\MrKatsuWebAPI.DTO\MrKatsuWebAPI.DTO.csproj" />
+    <ProjectReference Include="..\MrKatsuWebAPI.Helper\MrKatsuWebAPI.Helper.csproj" />
+  </ItemGroup>
+
 </Project>

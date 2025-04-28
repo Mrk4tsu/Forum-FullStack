@@ -1,12 +1,17 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Bson;
+using AspNetCore.Identity.MongoDbCore.Models;
 
 namespace MrKatsuWebAPI.DataAccess.Entities
 {
-    public class ApplicationUser : IdentityUser
+    public class ApplicationUser :  MongoIdentityUser<string>
     {
-        [BsonElement("FullName")]
-        public string FullName { get; set; }
+        public Profile Profile { get; set; } = new Profile();
+    }
+    public class Profile
+    {
+        public string DisplayName { get; set; } = string.Empty;
+        public string AvatarUrl { get; set; } = string.Empty;
     }
 }

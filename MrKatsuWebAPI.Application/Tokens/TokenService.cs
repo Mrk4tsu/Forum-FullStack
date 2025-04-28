@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Options;
 using MrKatsuWebAPI.DataAccess.Entities;
+using MrKatsuWebAPI.DTO.Authorize;
 namespace MrKatsuWebAPI.Application.Tokens
 {
     public class TokenService
@@ -14,7 +15,7 @@ namespace MrKatsuWebAPI.Application.Tokens
         {
             _jwtSettings = jwtSettings.Value;
         }
-        public string GenerateJwtToken(ApplicationUser user)
+        public TokenResponse GenerateJwtToken(ApplicationUser user)
         {
             var claims = new[]
             {
@@ -32,7 +33,16 @@ namespace MrKatsuWebAPI.Application.Tokens
                 claims: claims,
                 expires: DateTime.Now.AddMinutes(_jwtSettings.ExpiryMinutes),
                 signingCredentials: creds);
-            return new JwtSecurityTokenHandler().WriteToken(token);
+
+            var refreshToken = Guid.NewGuid().ToString();
+
+            var tokenResponse = new TokenResponse
+            {
+                AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
+                RefreshToken = refreshToken,
+                ExpiresAt = DateTime.UtcNow.AddMinutes(_jwtSettings.ExpiryMinutes)
+            };
+            return tokenResponse;
         }
     }
 }

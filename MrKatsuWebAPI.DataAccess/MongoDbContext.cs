@@ -16,20 +16,31 @@ namespace MrKatsuWebAPI.DataAccess
         {
             var client = new MongoClient(settings.Value.ConnectionString);
             _database = client.GetDatabase(settings.Value.DatabaseName);
+            var commentIndex = Builders<Comment>.IndexKeys
+                 .Ascending(c => c.TopicId)
+                 .Ascending(c => c.ParentCommentId)
+                 .Ascending(c => c.CreatedAt);
+            _database.GetCollection<Comment>("Comments").Indexes.CreateOne(new CreateIndexModel<Comment>(commentIndex));
 
-            // Đăng ký ánh xạ cho IdentityUser để sử dụng Id làm _id
-            if (!BsonClassMap.IsClassMapRegistered(typeof(IdentityUser)))
-            {
-                BsonClassMap.RegisterClassMap<IdentityUser<string>>(cm =>
-                {
-                    cm.AutoMap();
-                    cm.MapIdProperty(u => u.Id)
-                      .SetSerializer(new StringSerializer(BsonType.String));
-                });
-            }
+            var topicIndex = Builders<Topic>.IndexKeys
+                .Ascending(t => t.AuthorId) // Index trên chuỗi AuthorId
+                .Ascending(t => t.CreatedAt);
+            _database.GetCollection<Topic>("Topics").Indexes.CreateOne(new CreateIndexModel<Topic>(topicIndex));
+            //// Đăng ký ánh xạ cho IdentityUser để sử dụng Id làm _id
+            //if (!BsonClassMap.IsClassMapRegistered(typeof(IdentityUser)))
+            //{
+            //    BsonClassMap.RegisterClassMap<IdentityUser<string>>(cm =>
+            //    {
+            //        cm.AutoMap();
+            //        cm.MapIdProperty(u => u.Id)
+            //          .SetSerializer(new StringSerializer(BsonType.String));
+            //    });
+            //}
         }
         public IMongoCollection<ApplicationUser> Users => _database.GetCollection<ApplicationUser>("Users");
         public IMongoCollection<IdentityRole> Roles => _database.GetCollection<IdentityRole>("Roles");
+        public IMongoCollection<Topic> Topics => _database.GetCollection<Topic>("Topics");
+        public IMongoCollection<Comment> Comments => _database.GetCollection<Comment>("Comments");
         public IMongoDatabase Database => _database;
     }
 }

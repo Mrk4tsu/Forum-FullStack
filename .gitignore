@@ -415,3 +415,5 @@ git commit -m "Ignore appsettings.json"
 git push origin main
 *.json
 *.json
+*.json
+MrKatsuWebAPI/appsettings.json

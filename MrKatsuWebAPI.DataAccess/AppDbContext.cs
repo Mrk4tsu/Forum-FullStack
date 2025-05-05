@@ -24,6 +24,12 @@ namespace MrKatsuWebAPI.DataAccess
 
             builder.Entity<IdentityRoleClaim<int>>().ToTable("role_claims");
             builder.Entity<IdentityUserToken<int>>().ToTable("user_tokens").HasKey(x => x.UserId);
+            builder.Seed();
         }
+        public DbSet<Post> Posts { get; set; }
+        public DbSet<Reply> Replies { get; set; }
+        public DbSet<Reaction> Reactions { get; set; }
+        public DbSet<Mod> Mods { get; set; }
+        public DbSet<Url> Urls { get; set; }
     }
 }

@@ -2,11 +2,11 @@
 {
     public class ApiErrorResult<T> : ApiResult<T>
     {
-        public List<string> ValidationErrors { get; set; } = new List<string>();
+        public string[] ValidationErrors { get; set; } = Array.Empty<string>();
         public ApiErrorResult()
         {
         }
-        public ApiErrorResult(string message, List<string> validationErrors)
+        public ApiErrorResult(string message, string[] validationErrors)
         {
             Success = false;
             Message = message;
@@ -16,9 +16,9 @@
         {
             Success = false;
             Message = message;
-            ValidationErrors = new List<string>();
+            ValidationErrors = Array.Empty<string>();
         }
-        public ApiErrorResult(List<string> validationErrors)
+        public ApiErrorResult(string[] validationErrors)
         {
             Success = false;
             ValidationErrors = validationErrors;

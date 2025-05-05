@@ -1,6 +1,8 @@
-﻿using MrKatsuWebAPI.Application.Comments;
+﻿using MrKatsuWebAPI.Application.Mods;
+using MrKatsuWebAPI.Application.Posts;
+using MrKatsuWebAPI.Application.Replies;
 using MrKatsuWebAPI.Application.Systems;
-using MrKatsuWebAPI.Application.Topics;
+using MrKatsuWebAPI.Application.Systems.Cloudflares;
 
 namespace MrKatsuWebAPI.Extensions
 {
@@ -8,10 +10,13 @@ namespace MrKatsuWebAPI.Extensions
     {
         public static IServiceCollection AddDIService(this IServiceCollection services)
         {
+            services.AddHttpClient();
+            services.AddScoped<ICloudflareTurnstileService, CloudflareTurnstileService>();
+
             services.AddScoped<IAuthService, AuthServices>();
-            services.AddScoped<ITopicRepository, TopicRepository>();
-            services.AddScoped<ICommentRepository, CommentRepository>();
-            services.AddScoped<ITopicService, TopicServices>();
+            services.AddScoped<IPostService, PostService>();
+            services.AddScoped<IReplyService, ReplyService>();
+            services.AddScoped<IModService, ModService>();
             return services;
         }
     }

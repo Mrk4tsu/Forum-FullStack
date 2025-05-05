@@ -9,6 +9,8 @@ namespace MrKatsuWebAPI.DataAccess.Entities
         public DateTime TimeUpdated { get; set; } = DateTime.Now;
         public bool IsDeleted { get; set; } = false;
         public List<Post> Posts { get; set; }
+        public List<Mod> Mods { get; set; }
+        public List<Reaction> Reactions { get; set; }
         public List<Reply> Replies { get; set; }
     }
 }

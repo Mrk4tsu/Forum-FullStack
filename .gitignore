@@ -34,6 +34,7 @@ bld/
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
+.vscode/
 # Uncomment if you have tasks that create the project's static files in wwwroot
 #wwwroot/
 
@@ -395,9 +396,24 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
-
 # JetBrains Rider
 *.sln.iml
 
 # Tệp migration tự động nếu không cần
 Migrations/*.designer.cs
+appsettings.json
+appsettings.*.json
+*/appsettings.json
+*/ocelot.json
+ocelot.*.json
+ocelot.json
+FN.EmailService/appsettings.json
+echo "MrKatsuWebAPI.DataAccess/appsettings.json" >> .gitignore
+echo "MrKatsuWebAPI/appsettings.json" >> .gitignore
+git add .gitignore
+git commit -m "Ignore appsettings.json"
+git push origin main
+*.json
+*.json
+*.json
+MrKatsuWebAPI/appsettings.json

@@ -1,22 +1,25 @@
+using MrKatsuWebAPI.Extensions;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+builder.Services.InjectDbContextPool(builder.Configuration)
+                .ConfigureRedis(builder.Configuration)
+                .ConfigureIdentity()
+                .ConfigureJwt(builder.Configuration)
+                .ConfigureServicePayload()
+                .AddSwaggerExplorer()
+                .AddSmtpConfig(builder.Configuration)
+                .AddDIService();  
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+//Thêm log
+builder.Logging.AddConsole();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseAuthorization();
+app.ConfigureCORS()
+    .ConfigureAppPayLoad()
+   .ConfigureSwaggerExplorer()
+   .AddIdentityAuthMiddlewares();
 
 app.MapControllers();
 

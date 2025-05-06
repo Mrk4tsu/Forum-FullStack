@@ -1,0 +1,76 @@
+<div class="upload">
+  <form [formGroup]="modForm" (ngSubmit)="onSubmit()" class="form-upload">
+    <!-- Name Field -->
+    <div>
+      <input id="name" type="text" formControlName="name"
+             placeholder="Nhập tên mod tại đây"
+             class="form-control rounded-0 shadow-none">
+      <div *ngIf="modForm.get('name')?.invalid && modForm.get('name')?.touched" class="text-danger text-sm ms-2">
+        <div *ngIf="modForm.get('name')?.errors?.['required']">Không được để trống tên</div>
+        <div *ngIf="modForm.get('name')?.errors?.['minlength']">Ít nhất dài 3 kí tự</div>
+      </div>
+    </div>
+    <div class="main-container mb-3">
+      <div class="editor-container editor-container_classic-editor editor-container_include-style"
+           #editorContainerElement>
+        <div class="editor-container__editor">
+          <div #editorElement>
+            <ckeditor [editor]="this.ckeditor.Editor" [config]="this.ckeditor.config"
+                      *ngIf="this.ckeditor.Editor && this.ckeditor.config" formControlName="description"/>
+          </div>
+        </div>
+      </div>
+      <div *ngIf="modForm.get('description')?.invalid && modForm.get('description')?.touched"
+           class="text-danger ms-2 text-sm">
+        <div *ngIf="modForm.get('description')?.errors?.['required']">Phần chi tiết không được để trống</div>
+        <div *ngIf="modForm.get('description')?.errors?.['minlength']">Chưa đủ wow, viết dài thêm nữa đi</div>
+      </div>
+    </div>
+    <div class="row px-5">
+      <div class="d-flex align-items-center col-6">
+        <input id="isPrivate" type="checkbox" formControlName="isPrivate">
+        <label for="isPrivate" class="ml-2 block text-sm text-gray-900">Hỗ trợ server lậu</label>
+      </div>
+      <div class="d-flex align-items-center col-6">
+        <label for="categoryId" class="text-sm w-100 text-end me-3">Cho thiết bị</label>
+        <select id="categoryId" formControlName="categoryId" class="form-control">
+          <option value="1">Android</option>
+          <option value="2">Window</option>
+          <option value="3">Java</option>
+          <option value="4">IOS</option>
+        </select>
+      </div>
+
+    </div>
+
+    <div class="d-flex justify-content-center align-items-center">
+      <div class="url-upload">
+        <label class="block text-sm font-medium text-gray-700">Đính kèm link tải (Tối đa 3 link)</label>
+        <div class="mt-2 space-y-2" formArrayName="urls">
+          <div *ngFor="let url of urls.controls; let i = index" class="d-flex gap-2">
+            <input type="url" [formControlName]="i"
+                   class="form-control shadow-none my-2 py-1"
+                   placeholder="https://example.com">
+            <button *ngIf="canRemoveUrl" type="button" (click)="removeUrl(i)" class="btn btn-danger my-2 py-1">
+              Remove
+            </button>
+          </div>
+        </div>
+        <button type="button" *ngIf="canAddMoreUrls"
+                (click)="addUrl()" class="btn btn-primary my-2 py-1">
+          Thêm link tải
+        </button>
+      </div>
+    </div>
+
+
+    <!-- Submit Button -->
+    <div class="float-end">
+      <button type="submit" [disabled]="modForm.invalid || isLoading" class="btn-primary btn py-1 me-3">
+        <span *ngIf="!isLoading">Đăng</span>
+        <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"
+              role="status" aria-hidden="true"></span>
+      </button>
+    </div>
+  </form>
+</div>

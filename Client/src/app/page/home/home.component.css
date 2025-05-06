@@ -1,0 +1,67 @@
+.home {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--yellow-color);
+  color: var(--text-color);
+}
+
+.home .background {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+.download {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.download button {
+  width: 80px;
+  margin: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.download button img {
+  width: 100%;
+}
+
+small {
+  font-size: 8px;
+  padding: 0;
+  margin: 0;
+  color: var(--text-color);
+}
+
+.intro {
+  padding: 10px;
+}
+
+.skills {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 100%;
+}
+
+.skills ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: 5px;
+  display: flex;
+  max-width: 100%;
+}
+
+hr {
+  height: 5px;
+  background-color: var(--orange-color);
+  border: none;
+  margin: 0;
+  opacity: 1;
+}

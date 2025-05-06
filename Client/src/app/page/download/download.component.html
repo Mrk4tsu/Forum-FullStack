@@ -1,0 +1,104 @@
+<section>
+  <div class="back mb-2">
+    <a routerLink="/mod">Quay lại</a>
+  </div>
+  @if (isLoading) {
+    <p class="text-center">Đang tải dữ liệu...</p>
+  } @else {
+    @if (modDetail$ | async; as modDetail) {
+      <div class="topic-main">
+        <div class="user">
+          <img [src]="modDetail.authorAvatarUrl" alt="avatar"/>
+          <p class="small username text-center">{{ modDetail.authorDisplayName }}</p>
+          <p class="small color-brown text-center mt-2">admin</p>
+        </div>
+        <div class="topic-content">
+          <div class="top-content">
+            <p>{{ modService.getDateTimeAgo(modDetail.createdAt) }}</p>
+            <div class="d-flex align-items-center">
+              <p *ngIf="isOwner" (click)="deleteMod(modDetail.id)" class="btn btn-danger px-2">Xóa mod</p>
+              <a href="/mod/{{modDetail.id}}/edit" *ngIf="isOwner" class="btn btn-primary px-3 py-0 mx-1">Sửa</a>
+            </div>
+
+          </div>
+          <hr/>
+          <div class="topic-intro">
+            <h1 class="fs-6 fw-bold mb-2 p-0">{{ modDetail.title }} 
+              <span class="text-success" *ngIf="modDetail.isPrivate">[Hỗ trợ server lậu]</span>
+              <span class="text-danger" *ngIf="!modDetail.isPrivate">[Không hỗ trợ server lậu]</span>
+            </h1>
+            <div [innerHtml]="sanitizedContent"></div>
+          </div>
+
+          <div class="gap-2 my-3">
+            <a *ngFor="let u of modDetail.urls; let i = index"
+               class="btn btn-primary px-2 py-1 mx-1" [href]="u.url" target="_blank">Link tải {{ i + 1 }}</a>
+          </div>
+          <p class="d-flex justify-content-end fst-italic">Cập nhật lần cuối {{ formatDateTime }}</p>
+        </div>
+      </div>
+    }
+    <div class="ads text-center my-3">
+      <a href="https://discord.gg/kzHss3AG97" target="_blank" class="color-brown">Tham gia cộng đồng</a>
+    </div>
+    @if (reacts$|async; as reacts) {
+      @for (react of reacts; track react.id) {
+        <div class="topic-main">
+          <div class="user">
+            <img [src]="react.authorAvatarUrl" alt="avatar"/>
+            <p class="small username text-center">{{ react.authorDisplayName }}</p>
+          </div>
+          <div class="topic-content">
+            <div class="top-content">
+              <p>{{ modService.getDateTimeAgo(react.createdAt) }}</p>
+              <p *ngIf="userInfo?.sub == react.authorId.toString()"
+                 (click)="deleteReact(react.id)"
+                 class="btn btn-danger px-2">Xóa</p>
+            </div>
+            <hr/>
+            <div class="topic-intro">
+              <p class="fs-6"> {{ react.content }} </p>
+            </div>
+            <div class="topic-interaction">
+              <p class="auth-like"></p>
+              <div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+      <app-pagination
+        [currentPage]="paginationData.currentPage"
+        [totalPages]="paginationData.totalPages"
+        (pageChange)="onPageChange($event)">
+      </app-pagination>
+    }
+  }
+
+  <hr
+    style="
+    height: 5px;
+    background-color: var(--orange-color);
+    border: none;
+    margin: 1rem 0;
+    opacity: 1;"
+  />
+  <div *ngIf="isAuthorize" class="topic-main">
+    <div class="user">
+      <img [src]="userInfo?.given_name" [alt]="userInfo?.name"/>
+      <p class="small username text-center">{{ userInfo?.name }}</p>
+    </div>
+    <form class="topic-content" [formGroup]="form" (ngSubmit)="onReactSubmit()">
+      <textarea class="form-control shadow-none my-2"
+                name="content"
+                formControlName="content"
+                rows="4" placeholder="Nhập nội dung bình luận"></textarea>
+      <button class="my-2 btn btn-primary my-0 py-0 rounded-1 col-2 col-sm-2 col-md-1" type="submit">
+        <span *ngIf="!isSending">Gửi</span>
+        <span *ngIf="isSending" class="spinner-border spinner-border-sm me-2"
+              role="status" aria-hidden="true"></span>
+      </button>
+    </form>
+  </div>
+</section>

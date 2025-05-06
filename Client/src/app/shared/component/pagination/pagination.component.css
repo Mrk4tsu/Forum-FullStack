@@ -1,0 +1,23 @@
+
+.pagination {
+  display: flex;
+  justify-content: end;
+  padding: 0 10px;
+}
+
+.page-btn {
+  background-color: white;
+  color: var(--orange-color-dark);
+  border: none;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.page-btn.active {
+  background-color: var(--orange-color-dark);
+  color: white;
+}

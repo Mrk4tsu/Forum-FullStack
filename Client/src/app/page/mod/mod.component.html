@@ -1,0 +1,75 @@
+<div class="mod-container pb-2">
+  <h1 class="text-center fs-6 mb-0 pb-0 fw-normal mt-3">Tìm kiếm mod theo tag</h1>
+  <div class="d-flex justify-content-center align-items-center mt-2">
+    <ul class="list-tags">
+      <li *ngFor="let tag of tags" class="tag-item" [class.active]="tag.isActive">
+        <a (click)="onTagNameChange(tag.value)" class="tag">
+          <span><i class="fa-solid fa-tag"></i></span>
+          {{ tag.name }}</a>
+      </li>
+    </ul>
+  </div>
+  <div class="d-flex justify-content-center align-items-center mt-2">
+    <ul class="list-tags">
+      <li *ngFor="let tag of tagsDevice" class="tag-item" [class.active]="tag.isActive">
+        <a (click)="onTagCategoryChange(tag.name)" class="tag">
+          <span><i class="fa-solid fa-tag"></i></span>
+          {{ tag.name }}</a>
+      </li>
+    </ul>
+  </div>
+  <div class="d-flex justify-content-center align-items-center mt-2">
+    <ul class="list-tags">
+      <li *ngFor="let tag of tagsServer" class="tag-item" [class.active]="tag.isActive">
+        <a (click)="onTagServerChange(tag.query)" class="tag">
+          <span><i class="fa-solid fa-tag"></i></span>
+          {{ tag.name }}</a>
+      </li>
+    </ul>
+  </div>
+  <ul class="list-mod">
+    @if (isLoading) {
+      <p class="text-center">Đang lấy dữ liệu...</p>
+    } @else {
+      @if (mod$ | async; as mods) {
+        @for (mod of mods; track mod.id) {
+          <li>
+            <a routerLink="{{mod.authorDisplayName}}-{{mod.id}}" class="mod-item">
+              <img [src]="mod.image" alt="Ngọc rồng">
+              <div class="d-flex justify-content-between align-items-center w-100">
+                <div class="mod-info">
+                  <p class="text-start">{{ mod.title }}
+                    <!--                  <span *ngIf="a.isNew" class="new">-->
+                    <!--              <img src="assets/images/utilities/new.gif" alt="Mới">-->
+                    <!--            </span>-->
+                    <!--                  <span *ngIf="a.isOut" class="out-date text">-->
+                    <!--              [Lỗi thời]-->
+                    <!--            </span>-->
+                  </p>
+                  <p>Bởi
+                    <span class="color-brown">{{ mod.authorDisplayName }} </span>
+                    <span>{{ modService.getDateTimeAgo(mod.createdAt) }}</span>
+                  </p>
+                </div>
+                <div class="mod-action">
+                  <p class="text-uppercase">{{ mod.category }}</p>
+                  <button class="border-0 bg-transparent float-end p-0 me-4">
+                    <i class="fa-solid fa-download text-center color-brown p-0 m-0"></i>
+                  </button>
+                </div>
+              </div>
+            </a>
+          </li>
+        } @empty {
+          <p class="text-center">Không tìm thấy bản mod nào</p>
+        }
+      }
+    }
+  </ul>
+  <app-pagination
+    [currentPage]="paginationData.currentPage"
+    [totalPages]="paginationData.totalPages"
+    (pageChange)="onPageChange($event)">
+  </app-pagination>
+
+</div>

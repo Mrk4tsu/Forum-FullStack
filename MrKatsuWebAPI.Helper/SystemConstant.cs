@@ -8,6 +8,7 @@
         public const string JWT_SETTING = "JwtSettings";
 
         public const string CACHE_MOD = "mod";
+        public const string CACHE_NOTIFY = "notify";
         public const string CACHE_POST = "topic";
 
         public const string RESET_PASSWORD_TEMPLATE = "6955832";

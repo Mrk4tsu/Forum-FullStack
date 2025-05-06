@@ -4,7 +4,6 @@ using MrKatsuWebAPI.Application.Tokens;
 using MrKatsuWebAPI.DataAccess.Entities;
 using MrKatsuWebAPI.DTO.ApiResponse;
 using MrKatsuWebAPI.DTO.Authorize;
-using MrKatsuWebAPI.DTO.Mails;
 using MrKatsuWebAPI.Helper;
 using Newtonsoft.Json.Linq;
 using System.Net;

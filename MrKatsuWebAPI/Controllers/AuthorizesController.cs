@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using MrKatsuWebAPI.Application.Systems;
 using MrKatsuWebAPI.Application.Systems.Cloudflares;
 using MrKatsuWebAPI.DTO.Authorize;
-using MrKatsuWebAPI.DTO.Mails;
 
 namespace MrKatsuWebAPI.Controllers
 {
@@ -59,8 +58,7 @@ namespace MrKatsuWebAPI.Controllers
         public async Task<IActionResult> ResetPassword(ForgotPasswordRequest request)
         {
             var result = await _authService.ResetPassword(request);
-            if (result.Success) return Ok(result);
-            return BadRequest(result);
+            return Ok(result);
         }
         [HttpPost("change-password"), Authorize]
         public async Task<IActionResult> ChangePassword(ChangePasswordRequest request)

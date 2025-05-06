@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MrKatsuWebAPI.Application.Redis;
 using MrKatsuWebAPI.DataAccess;
+using MrKatsuWebAPI.DataAccess.Enums;
 using MrKatsuWebAPI.DTO.ApiResponse;
 using MrKatsuWebAPI.DTO.Paging;
 using MrKatsuWebAPI.DTO.PostRequest;
@@ -49,7 +50,7 @@ namespace MrKatsuWebAPI.Application.Posts
         private IQueryable<PostViewModel> BuildBaseQuery()
         {
             return _db.Posts.Include(x => x.User)
-                .Where(x => !x.IsDeleted)
+                .Where(x => !x.IsDeleted && x.PostType == PostType.POST)
                 .Select(x => new PostViewModel
                 {
                     Id = x.Id,
@@ -59,7 +60,8 @@ namespace MrKatsuWebAPI.Application.Posts
                     AuthorId = x.UserId,
                     CommentCount = _db.Replies.Count(r => r.PostId == x.Id),
                     Title = x.Title,
-                    UpdatedAt = x.UpdatedAt
+                    UpdatedAt = x.UpdatedAt,
+                    IsLocked = x.IsLocked
                 });
         }
         private List<PostViewModel> ApplyMemoryFilters(List<PostViewModel> data, PagingRequest request)

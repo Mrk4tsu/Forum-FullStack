@@ -85,5 +85,29 @@ namespace MrKatsuWebAPI.Controllers
             var result = await _replyService.DeleteReply(id, userId.Value);
             return Ok(result);
         }
+        [HttpPost("create-notify"), Authorize]
+        public async Task<IActionResult> CreateNotification([FromBody] PostRequest request)
+        {
+            var userId = GetUserIdFromClaims();
+            if (userId == null)
+                return Unauthorized();
+            var result = await _postService.CreateNotification(request, userId.Value);
+            return Ok(result);
+        }
+        [HttpGet("get-notify")]
+        public async Task<IActionResult> GetNotifications()
+        {
+            var result = await _postService.GetNotifications();
+            return Ok(result);
+        }
+        [HttpGet("delete-notify"), Authorize]
+        public async Task<IActionResult> DeleteNotify(int id)
+        {
+            var userId = GetUserIdFromClaims();
+            if (userId == null)
+                return Unauthorized();
+            var result = await _postService.DeleteNotify(id, userId.Value);
+            return Ok(result);
+        }
     }
 }

@@ -10,7 +10,11 @@ namespace MrKatsuWebAPI.Application.Posts
         Task<ApiResult<PostDetailViewModel>> GetPostById(int id, PagingRequest request);
         Task<ApiResult<PagedResult<ReplyViewModel>>> GetRepliesByPostId(int postId, PagingRequest request);
         Task<ApiResult<int>> CreatePost(PostRequest request, int userId);
+        Task<ApiResult<int>> CreateNotification(PostRequest request, int userId);
+        Task<ApiResult<List<PostViewModel>>> GetNotifications();
+        Task<ApiResult<bool>> DeleteNotify(int id, int userId);
         Task<ApiResult<bool>> UpdatePost(int id, PostRequest request, int userId);
+        Task<ApiResult<bool>> UpdatePostStatus(int id, int userId);
         Task<ApiResult<bool>> DeletePost(int id, int userId);
     }
 }

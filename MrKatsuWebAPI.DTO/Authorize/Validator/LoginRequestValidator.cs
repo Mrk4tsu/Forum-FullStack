@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace MrKatsuWebAPI.DTO.Authorize
+namespace MrKatsuWebAPI.DTO.Authorize.Validator
 {
     public class LoginRequestValidator : AbstractValidator<LoginModel>
     {

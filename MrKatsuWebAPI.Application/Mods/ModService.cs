@@ -183,6 +183,9 @@ namespace MrKatsuWebAPI.Application.Mods
                 IsDeleted = false
             };
             _db.Reactions.Add(reaction);
+
+            mod.UpdatedAt = _now;
+            _db.Mods.Update(mod);
             await _db.SaveChangesAsync();
 
             await _redis.IncrementValue(minuteRateKey);

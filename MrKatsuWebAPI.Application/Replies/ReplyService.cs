@@ -38,7 +38,7 @@ namespace MrKatsuWebAPI.Application.Replies
             var dailyCommentCount = recentCount.HasValue ? int.Parse(dailyCount.ToString()) : 0;
             if (dailyCommentCount >= 50) return new ApiErrorResult<int>("Bạn đã đạt giới hạn bình luận trong ngày. Vui lòng thử lại sau.");
 
-            var post = await _db.Posts.FirstOrDefaultAsync(x => x.Id == request.PostId && !x.IsDeleted);
+            var post = await _db.Posts.FirstOrDefaultAsync(x => x.Id == request.PostId && !x.IsDeleted && !x.IsLocked);
             if (post == null) return new ApiErrorResult<int>("Post not found or has been deleted");
             var newReply = new Reply
             {
@@ -50,6 +50,9 @@ namespace MrKatsuWebAPI.Application.Replies
                 IsDeleted = false,                
             };
             _db.Replies.Add(newReply);
+
+            post.UpdatedAt = _now;
+            _db.Posts.Update(post);
             await _db.SaveChangesAsync();
             await _redis.IncrementValue(minuteRateKey);
             await _redis.SetKeyExpire(minuteRateKey, TimeSpan.FromMinutes(3));

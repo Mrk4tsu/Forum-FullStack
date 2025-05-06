@@ -13,7 +13,7 @@ using MrKatsuWebAPI.Application.Redis;
 using MrKatsuWebAPI.Application.Tokens;
 using MrKatsuWebAPI.DataAccess;
 using MrKatsuWebAPI.DataAccess.Entities;
-using MrKatsuWebAPI.DTO.Authorize;
+using MrKatsuWebAPI.DTO.Authorize.Validator;
 using MrKatsuWebAPI.DTO.Settings;
 using MrKatsuWebAPI.Helper;
 using MySqlConnector;

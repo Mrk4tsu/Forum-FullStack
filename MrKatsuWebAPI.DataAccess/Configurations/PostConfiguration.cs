@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using MrKatsuWebAPI.DataAccess.Entities;
+using MrKatsuWebAPI.DataAccess.Enums;
 
 namespace MrKatsuWebAPI.DataAccess.Configurations
 {
@@ -19,10 +20,13 @@ namespace MrKatsuWebAPI.DataAccess.Configurations
             builder.Property(x => x.IsDeleted).HasColumnName("is_deleted").IsRequired().HasDefaultValue(false);
             builder.HasOne(x => x.User).WithMany(x => x.Posts).HasForeignKey(x => x.UserId);
             builder.HasMany(x => x.Replies).WithOne(x => x.Post).HasForeignKey(x => x.PostId);
+            builder.Property(x => x.IsLocked).HasColumnName("is_locked").IsRequired().HasDefaultValue(false);
+            builder.Property(x => x.PostType).HasColumnName("post_type").IsRequired().HasDefaultValue(PostType.POST);
 
             builder.HasIndex(x => x.UpdatedAt).HasDatabaseName("IX_Posts_UpdatedAt");
             builder.HasIndex(x => x.UserId).HasDatabaseName("IX_Posts_UserId");
             builder.HasIndex(x => x.IsDeleted).HasDatabaseName("IX_Posts_IsDeleted");
+            builder.HasIndex(x => x.IsLocked).HasDatabaseName("IX_Posts_IsLocked");
         }
     }
 }

@@ -2,6 +2,7 @@
 using MrKatsuWebAPI.Application.Redis;
 using MrKatsuWebAPI.DataAccess;
 using MrKatsuWebAPI.DataAccess.Entities;
+using MrKatsuWebAPI.DataAccess.Enums;
 using MrKatsuWebAPI.DTO.ApiResponse;
 using MrKatsuWebAPI.DTO.Paging;
 using MrKatsuWebAPI.DTO.PostRequest;
@@ -23,6 +24,54 @@ namespace MrKatsuWebAPI.Application.Posts
                 .SetTimeZone("SE Asia Standard Time")
                 .SetRemoveTick(true).Build();
         }
+        public async Task<ApiResult<List<PostViewModel>>> GetNotifications()
+        {
+            var cacheKey = SystemConstant.CACHE_NOTIFY;
+            List<PostViewModel>? cachedData = null;
+            bool useCache = await _redis.KeyExist(cacheKey);
+            if (useCache)
+            {
+                cachedData = await _redis.GetValue<List<PostViewModel>>(cacheKey);
+                if (cachedData != null && cachedData.Count > 0)
+                {
+                    return new ApiSuccessResult<List<PostViewModel>>(cachedData);
+                }
+            }
+            var query = _db.Posts.Include(x => x.User)
+                .Where(x => (!x.IsDeleted && x.PostType == PostType.NOTIFICATION) || x.Id == 1)
+                .Take(5)
+                .Select(x => new PostViewModel
+                {
+                    Id = x.Id,
+                    AuthorDisplayName = x.User.UserName!,
+                    AuthorAvatarUrl = x.User.Avatar,
+                    CreatedAt = x.CreatedAt,
+                    AuthorId = x.UserId,
+                    IsLocked = x.IsLocked,
+                    Title = x.Title,
+                }).OrderByDescending(x => x.CreatedAt);
+            var notifications = await query.ToListAsync();
+            await _redis.SetValue(cacheKey, notifications);
+            return new ApiSuccessResult<List<PostViewModel>>(notifications);
+        }
+        public async Task<ApiResult<int>> CreateNotification(PostRequest request, int userId)
+        {
+            var post = new Post
+            {
+                Content = request.Content,
+                Title = request.Title,
+                UserId = userId,
+                CreatedAt = _now,
+                UpdatedAt = _now,
+                IsDeleted = false,
+                IsLocked = true,
+                PostType = PostType.NOTIFICATION
+            };
+            _db.Posts.Add(post);
+            await _db.SaveChangesAsync();
+            await RemoveOldCache();
+            return new ApiSuccessResult<int>(post.Id);
+        }
         public async Task<ApiResult<int>> CreatePost(PostRequest request, int userId)
         {
             var today = _now.ToString("yyyy-MM-dd");
@@ -40,6 +89,8 @@ namespace MrKatsuWebAPI.Application.Posts
                 CreatedAt = _now,
                 UpdatedAt = _now,
                 IsDeleted = false,
+                IsLocked = false,
+                PostType = PostType.POST
             };
             _db.Posts.Add(post);
             await _db.SaveChangesAsync();
@@ -56,7 +107,16 @@ namespace MrKatsuWebAPI.Application.Posts
             }
             return new ApiSuccessResult<int>(post.Id);
         }
-
+        public async Task<ApiResult<bool>> DeleteNotify(int id, int userId)
+        {
+            var post = await _db.Posts.FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId);
+            if (post == null) return new ApiErrorResult<bool>("Không có quyền để xóa bài viết này");
+            post.IsDeleted = true;
+            _db.Posts.Update(post);
+            await _db.SaveChangesAsync();
+            await RemoveOldCache();
+            return new ApiSuccessResult<bool>(true);
+        }
         public async Task<ApiResult<bool>> DeletePost(int id, int userId)
         {
             var post = await _db.Posts.FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId);
@@ -81,6 +141,7 @@ namespace MrKatsuWebAPI.Application.Posts
                 CreatedAt = post.CreatedAt,
                 AuthorId = post.UserId,
                 Content = post.Content,
+                IsLocked = post.IsLocked,
                 Title = post.Title,
             };
             return new ApiSuccessResult<PostDetailViewModel>(postViewModel);
@@ -132,8 +193,24 @@ namespace MrKatsuWebAPI.Application.Posts
             await RemoveOldCache();
             return new ApiSuccessResult<bool>(true);
         }
+
+        public async Task<ApiResult<bool>> UpdatePostStatus(int id, int userId)
+        {
+            var adminRole = await _db.UserRoles.FirstOrDefaultAsync(x => x.UserId == userId && x.RoleId == 1);
+            var author = await _db.Posts.FirstOrDefaultAsync(x => x.Id == id && x.UserId == userId);
+            if (adminRole == null && author == null) return new ApiErrorResult<bool>("Bạn không có quyền để thực hiện hành động này");
+            var post = await _db.Posts.FirstOrDefaultAsync(x => x.Id == id);
+            if (post == null) return new ApiErrorResult<bool>("Post not found");
+            post.IsLocked = !post.IsLocked;
+            _db.Posts.Update(post);
+            await _db.SaveChangesAsync();
+            await RemoveOldCache();
+            return new ApiSuccessResult<bool>(true);
+        }
+
         private async Task RemoveOldCache()
         {
+            await _redis.RemoveValue(SystemConstant.CACHE_NOTIFY);
             await _redis.RemoveValue(SystemConstant.CACHE_POST);
         }
     }

@@ -1,6 +1,5 @@
 ﻿using MrKatsuWebAPI.DTO.ApiResponse;
 using MrKatsuWebAPI.DTO.Authorize;
-using MrKatsuWebAPI.DTO.Mails;
 
 namespace MrKatsuWebAPI.Application.Systems
 {

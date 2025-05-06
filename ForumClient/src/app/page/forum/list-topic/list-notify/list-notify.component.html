@@ -1,0 +1,7 @@
+<div class="notification-list">
+  <div class="notification-item" *ngFor="let notification of notifications">
+    <img [src]="notification.authorAvatarUrl" alt="Icon" class="notification-icon m-1">
+    <a href="javascript:void(0)" routerLink="/notification/{{notification.id}}"
+       class="notification-text">{{ notification.title }}</a>
+  </div>
+</div>

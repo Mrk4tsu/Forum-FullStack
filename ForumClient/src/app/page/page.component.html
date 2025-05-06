@@ -1,0 +1,33 @@
+<main class="wrapper">
+  <div class="container-header">
+    <div class="logo">
+      <img src="/assets/images/logo.png" alt="Chú Bé Rồng Online">
+    </div>
+    <nav class="menu">
+      <a href="https://gavl.io.vn" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Trang Chủ</a>
+      <a href="https://gavl.io.vn/mod" [class.active]="isModActive()">Tải MOD</a>
+      <a routerLink="/" class="active">Diễn Đàn</a>
+      <a href="https://gavl.io.vn/social" routerLinkActive="active">Fanpage</a>
+    </nav>
+  </div>
+
+  <div class="page">
+    <router-outlet></router-outlet>
+  </div>
+
+  <footer>
+    <div class="footer">
+      <span class="text-white">
+        Bản quyền © Gà Tập Chơi (<a class="text-white" href="https://github.com/Mrk4tsu" target="_blank">MrKatsu</a>) 4/2022 - {{ dateNow }}
+      </span>
+      <div class="navigate-select d-flex align-items-center justify-content-center mt-2">
+        <select class="form-control select-mod shadow-none py-0" (change)="onNavigate($event)">
+          <option selected>Gà Tập Chơi</option>
+          <option value="https://manhhdc.id.vn">Manhhdc</option>
+          <option value="https://hunghero.id.vn/">Hùng Hero</option>
+          <option value="https://electroheavenvn.github.io">ElectroHeaven</option>
+        </select>
+      </div>
+    </div>
+  </footer>
+</main>

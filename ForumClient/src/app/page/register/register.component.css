@@ -1,0 +1,22 @@
+.select-avatar {
+  display: flex;
+}
+
+.select-avatar img {
+  width: 35px;
+  height: 35px;
+  object-fit: contain;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.dialog {
+  background-color: white;
+  width: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px;
+  border-radius: 5px;
+  border: 2px solid #000000;
+}

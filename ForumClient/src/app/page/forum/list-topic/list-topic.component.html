@@ -1,0 +1,62 @@
+<app-list-notify/>
+<form *ngIf="isAuthorize" class="post-create" [formGroup]="form" (ngSubmit)="createTopic()">
+
+  <input type="text" placeholder="Tạo chủ đề mới" name="title" formControlName="title"
+         class="form-control shadow-none rounded-0">
+  <div class="main-container">
+    <div class="editor-container editor-container_classic-editor" #editorContainerElement>
+      <div class="editor-container__editor">
+        <div #editorElement>
+          <ckeditor [editor]="ckEditor.Editor" [config]="ckEditor.config"
+                    *ngIf="ckEditor.Editor && ckEditor.config"
+                    formControlName="content"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--  <textarea placeholder=" Viết chi tiết cho chủ đề" name="content" formControlName="content"-->
+  <!--    class="form-control shadow-none rounded-0" rows="3"></textarea>-->
+  <div class="start-0 bottom-0 position-absolute ps-3">
+    <p class="text-danger">{{ message }}</p>
+  </div>
+  <button type="submit" class="btn btn-primary my-0 py-0 button">
+    <span *ngIf="!isLoading">Đăng</span>
+    <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+  </button>
+</form>
+<p class="ms-2 text-primary py-0 my-0 text-danger">Lưu ý: Chỉ có thể tạo tối đa 3 topic mỗi ngày</p>
+<hr style="
+  height: 5px;
+  background-color: var(--orange-color);
+  border: none;
+  margin: 1rem 0;
+  opacity: 1;"/>
+<div class="post-list p-2">
+  @if (topics$ | async; as topics) {
+    @for (topic of topics; track topic.id) {
+      <div class="post-item">
+        <div class="avatar">
+          <img [src]="topic.authorAvatarUrl" alt="Avatar">
+        </div>
+        <div class="post-content">
+          <div class="post-title">
+            <a routerLink="/topic/{{topic.id}}" class="d-flex align-items-center">
+          <span *ngIf="topic.isLocked" class="mb-1 me-1">
+          <img src="assets/images/utilities/lock_red.gif" alt="locked">
+          </span> {{ topic.title }}</a>
+          </div>
+          <div class="post-info">
+            bởi <span class="username">{{ topic.authorDisplayName }}</span>
+            <span class="heart">♥</span>
+            <span class="time">{{ topicService.getTimeAgo(topic.updatedAt) }}</span>
+          </div>
+        </div>
+      </div>
+    }
+
+  }
+  <app-pagination [currentPage]="paginationData.currentPage" [totalPages]="paginationData.totalPages"
+                  (pageChange)="onPageChange($event)">
+  </app-pagination>
+</div>

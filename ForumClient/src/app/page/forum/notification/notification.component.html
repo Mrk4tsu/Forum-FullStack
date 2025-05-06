@@ -1,0 +1,38 @@
+<section>
+  <div class="back mb-2">
+    <a routerLink="/">Quay lại</a>
+  </div>
+  @if (notify$ | async; as notify) {
+    <div class="topic-main">
+      <div class="user">
+        <img [src]="notify.authorAvatarUrl" alt="avatar"/>
+        <p class="small username text-center">{{ notify.authorDisplayName }}</p>
+      </div>
+      <div class="topic-content">
+        <div class="top-content">
+          <p>{{ topicService.getTimeAgo(notify.createdAt) }}</p>
+          <div *ngIf="isAuthorize" class="d-flex align-items-center gap-2">
+            <a href="https://gavl.io.vn/edit-notify/{{notify.id}}" [appHideContentIfClaimsNotMet]="claimReq.bossOnly"
+               class="btn btn-primary shadow-none py-0">Sửa</a>
+            <a [appHideContentIfClaimsNotMet]="claimReq.bossOnly" class="btn btn-danger shadow-none py-0">Xóa</a>
+          </div>
+        </div>
+        <hr/>
+        <div class="topic-intro">
+          <h1 class="fs-6 fw-bold m-0 p-0">{{ notify.title }}</h1>
+          <div class="fs-6 content-html" [innerHtml]="sanitizedContent"></div>
+        </div>
+        <div class="topic-interaction">
+          <p></p>
+          <div>
+            <!--            <button><img src="/assets/images/utilities/unlike.png" alt="like"/>0</button>-->
+            <!--            <button><img src="/assets/images/utilities/like.png" alt="like"/>1</button>-->
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+  <div class="ads text-center my-3">
+    <a href="https://discord.gg/kzHss3AG97" target="_blank" class="color-brown">Tham gia cộng đồng</a>
+  </div>
+</section>

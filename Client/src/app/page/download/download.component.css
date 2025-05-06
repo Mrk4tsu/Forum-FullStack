@@ -1,0 +1,139 @@
+::ng-deep .image {
+  text-align: center;
+  max-width: 100%;
+  width: auto;
+}
+
+::ng-deep figure {
+  margin: auto;
+  padding: 0;
+  text-align: center;
+}
+
+::ng-deep .image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+
+section {
+  width: 100%;
+}
+
+.back {
+  width: 100%;
+  background-color: #D3913D;
+  padding: 6px 3px;
+}
+
+.back a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.topic-main {
+  min-height: 100px;
+  width: 100%;
+  display: flex;
+  gap: 10px;
+  margin-bottom: 5px;
+}
+
+.user {
+  width: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* quan trọng nè */
+  align-items: center;
+  height: 100%;
+  padding: 5px 0;
+}
+
+.user img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.user .username {
+  color: #1E5B7E;
+}
+
+.topic-content {
+  flex: 1;
+  padding: 0 10px;
+  margin-right: 5px;
+  background-color: white;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+
+.topic-content::before {
+  content: "";
+  position: absolute;
+  left: -8px;
+  top: 5px;
+  width: 0;
+  height: 0;
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-right: 10px solid white;
+}
+
+.top-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10px;
+  font-style: italic;
+  margin-top: 5px;
+}
+
+p {
+  margin: 0;
+  padding: 0;
+}
+
+/*1E5B7E*/
+.topic-intro h1 {
+  color: #1E5B7E;
+}
+
+.topic-intro p {
+  font-size: 11px;
+}
+
+.topic-interaction {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: auto; /* đẩy nó xuống dưới */
+  padding: 5px 10px;
+}
+
+.ads a {
+  text-decoration: none;
+}
+
+.ads a:hover {
+  color: var(--orange-color);
+}
+
+.topic-interaction button {
+  background: transparent;
+  border: none;
+}
+
+.auth-like {
+  font-size: 10px;
+  font-style: italic;
+}
+
+hr {
+  margin-top: 2px;
+  padding: 0;
+}

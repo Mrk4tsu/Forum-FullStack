@@ -1,0 +1,120 @@
+.authorize {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.authorize a {
+  background-color: var(--orange-color);
+  border: none;
+  margin: 3px;
+  padding: 8px 13px;
+  text-decoration: none;
+  color: #5a2d0c;
+}
+
+.authorize a:hover {
+  background-color: var(--color-hover);
+  color: white;
+}
+
+.post-list {
+  margin: 0 auto;
+}
+
+.post-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.avatar img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  margin-right: 10px;
+}
+
+.post-title a {
+  color: #5a2d0c;
+  text-decoration: none;
+}
+
+.post-title {
+  font-size: 13px;
+  margin-bottom: 2px;
+
+}
+
+.post-info {
+  font-size: 12px;
+  color: #5a2d0c;
+}
+
+.avatar-user {
+  width: 45px;
+  height: 45px;
+  object-fit: contain;
+  margin: 10px 0;
+}
+
+.username {
+  color: var(--orange-color-dark);
+}
+
+.heart {
+  color: red;
+  margin-left: 5px;
+}
+
+.time {
+  margin-left: 5px;
+}
+
+.pagination {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.page-btn {
+  background-color: #fff;
+  border: none;
+  color: #333;
+  width: 30px;
+  height: 30px;
+  margin: 0 2px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.page-btn.active {
+  background-color: #333;
+  color: white;
+}
+
+.notification-list {
+  background-color: #e67e00;
+  margin-bottom: 15px;
+}
+
+.notification-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+  color: white;
+}
+
+.notification-icon {
+  width: 30px;
+  height: 30px;
+  margin-right: 8px;
+  object-fit: contain;
+}
+
+.notification-text {
+  flex: 1;
+  font-size: 12px;
+  text-decoration: none;
+  color: white;
+}

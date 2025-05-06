@@ -1,0 +1,104 @@
+<h1 class="fs-4 text-center mt-3">Đăng ký tài khoản</h1>
+<form class="form mt-3" [formGroup]="form" (ngSubmit)="onRegister()">
+  <div class="form-input">
+    <div class="mb-1 row">
+      <label for="username" class="col-4 col-form-label">Tài khoản</label>
+      <div class="col-8">
+        <input type="text" formControlName="username" minlength="6" maxlength="10" required
+               class="form-control shadow-none px-2" id="username">
+        @if (hasDisplayError('username')) {
+          <div class="text-danger">
+            <ng-container [ngSwitch]="form.controls.username.errors | firstkey">
+              <div *ngSwitchCase="'required'">
+                Vui lòng không để trống tài khoản
+              </div>
+              <div *ngSwitchCase="'minlength'">
+                Tài khoản phải có ít nhất 6 kí tự
+              </div>
+            </ng-container>
+          </div>
+        }
+      </div>
+    </div>
+    <div class="mb-1 row">
+      <label for="email" class="col-4 col-form-label">Email</label>
+      <div class="col-8">
+        <input type="email" formControlName="email" required
+               class="form-control shadow-none px-2" id="email">
+        @if (hasDisplayError('email')) {
+          <div class="text-danger">
+            @if (form.controls.email.hasError('required')) {
+              <div>
+                Vui lòng nhập địa chỉ email
+              </div>
+            } @else if (form.controls.email.hasError('email')) {
+              <div>
+                Vui lòng nhập email đúng hợp lệ
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+    <div class="row">
+      <label for="password"
+             class="col-4 col-form-label">Mật khẩu</label>
+      <div class="col-8">
+        <input type="password" formControlName="password" minlength="6" required
+               class="form-control shadow-none px-2" id="password">
+        @if (hasDisplayError('password')) {
+          <div class="text-danger">
+            <ng-container [ngSwitch]="form.controls.password.errors | firstkey">
+              <div *ngSwitchCase="'required'">
+                Vui lòng nhập mật khẩu
+              </div>
+              <div *ngSwitchCase="'minlength'">
+                Mật khẩu phải có ít nhất 6 kí tự
+              </div>
+            </ng-container>
+          </div>
+        }
+      </div>
+    </div>
+    <div class="row">
+      <label for="re-password" class="col-4 col-form-label">Xác nhận mật khẩu</label>
+      <div class="col-8">
+        <input type="password" formControlName="confirmPassword" minlength="6" required
+               class="form-control shadow-none px-2" id="re-password">
+        @if (hasDisplayError('confirmPassword') || form.hasError('mismatch')) {
+          <div class="text-danger">
+            Mật khẩu xác nhận không khớp
+          </div>
+        }
+      </div>
+    </div>
+    <div class="select-avatar row">
+      <p> Chọn ảnh đại diện </p>
+      <label *ngFor="let a of avatar" class="col-3 mb-2 d-flex flex-column align-items-center justify-content-center">
+        <img [src]="a.url" alt="avatar">
+        <input type="radio" class="me-2 mt-1" name="avatarIndex" formControlName="avatarIndex" [value]="a.index"
+               checked>
+      </label>
+      <small class="color-brown text-center">Lưu ý: Lựa chọn avatar sẽ không thể hoàn tác sau này</small>
+    </div>
+  </div>
+  <app-captcha (verified)="onCaptchaVerified($event)"></app-captcha>
+  <p class="color-orange text-center py-0 my-0">{{ message }}</p>
+  <button [disabled]="isLoading" type="submit">
+    <span *ngIf="!isLoading">Đăng ký</span>
+    <span *ngIf="isLoading">
+    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+        Đợi tí...
+    </span>
+  </button>
+  @if (captchaToken$ | async; as captchaToken) {
+    <p hidden="hidden">{{ captchaToken }}</p>
+  }
+</form>
+<div class="d-flex justify-content-center">
+  <div class="dialog my-3">
+    <p class="py-0 my-0"><strong>Lưu ý</strong>: Chúng tôi không yêu cầu thông tin của bạn có đúng thực tế hay không, tuy nhiên, để tăng bảo mật, chúng tôi khuyên hãy sử dụng email mà bạn sử dụng</p>
+  </div>
+</div>
+
+

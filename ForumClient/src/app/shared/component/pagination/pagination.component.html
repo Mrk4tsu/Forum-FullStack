@@ -1,0 +1,23 @@
+<!--<nav *ngIf="totalPages > 1" aria-label="Page navigation">-->
+<!--  <div class="paginate my-2">-->
+<!--    <a [class.disabled]="currentPage === 1" href="javascript:void(0)" class="pag-link-b"-->
+<!--       (click)="onPageChange(currentPage - 1)" aria-label="Previous">Trước</a>-->
+<!--    <a href="javascript:void(0)" *ngFor="let page of getPages()"-->
+<!--       (click)="onPageChange(page)"-->
+<!--       class="pag-link" [class.active]="page === currentPage">{{ page }}</a>-->
+<!--    <a href="javascript:void(0)"-->
+<!--       (click)="onPageChange(currentPage + 1)" aria-label="Next"-->
+<!--       [class.disabled]="currentPage === totalPages" class="pag-link-b">Sau</a>-->
+<!--  </div>-->
+<!--</nav>-->
+<div *ngIf="totalPages > 1" class="pagination gap-1">
+  <button (click)="onPageChange(currentPage - 1)"
+          *ngIf="currentPage != 1"
+          class="page-btn"><</button>
+  <button *ngFor="let page of getPages()"
+          (click)="onPageChange(page)"
+          class="page-btn" [class.active]="page === currentPage">{{ page }}
+  </button>
+  <button *ngIf="currentPage != totalPages" (click)="onPageChange(currentPage + 1)"
+    class="page-btn">></button>
+</div>

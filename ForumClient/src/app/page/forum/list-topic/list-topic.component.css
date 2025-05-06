@@ -1,0 +1,14 @@
+.post-create {
+  position: relative;
+  min-height: 130px;
+  background: white;
+  margin: 5px;
+  border-radius: 5px;
+  padding-bottom: 30px;
+}
+
+.post-create .button {
+  position: absolute;
+  bottom: 5px;
+  right: 5px;
+}

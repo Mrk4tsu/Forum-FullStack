@@ -1,0 +1,38 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.form-input {
+  width: 50%;
+}
+
+.form-input input {
+  padding: 3px;
+  width: 100%;
+}
+
+.form button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background-color: var(--orange-color);
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+.form button:hover{
+  background-color: var(--orange-color-dark);
+}
+@media (min-width: 768px) and (max-width: 1025px) {
+  .form-input {
+    width: 80%;
+  }
+}
+
+@media (max-width: 768px) {
+  .form-input {
+    width: 80%;
+  }
+}

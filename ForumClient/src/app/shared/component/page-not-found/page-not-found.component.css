@@ -1,0 +1,10 @@
+.dialog{
+  background-color: white;
+  width: 90%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 15px 0;
+  border-radius: 5px;
+  border: 2px solid #000000;
+}

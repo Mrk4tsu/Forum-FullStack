@@ -1,0 +1,112 @@
+<div class="upload">
+  <div *ngIf="isLoading" class="text-center py-3">
+    <span class="loading loading-spinner loading-lg"></span>
+    <p>Loading mod data...</p>
+  </div>
+
+  <form *ngIf="!isLoading" [formGroup]="modForm" (ngSubmit)="onSubmit()" class="form-upload">
+    <!-- Title Field -->
+    <div>
+      <input id="title" type="text"
+             formControlName="name" class="form-control rounded-0 shadow-none">
+      <div *ngIf="modForm.get('title')?.invalid && modForm.get('name')?.touched" class="text-danger text-sm">
+        <div *ngIf="modForm.get('title')?.errors?.['required']">Title is required</div>
+        <div *ngIf="modForm.get('title')?.errors?.['minlength']">Title must be at least 3 characters</div>
+      </div>
+    </div>
+
+    <div class="main-container mb-3">
+      <div *ngIf="isEditorReady && editor && editorConfig">
+        <ckeditor
+          [editor]="editor"
+          [config]="editorConfig"
+          formControlName="description"
+          (ready)="onEditorReady($event)"
+        ></ckeditor>
+      </div>
+      <div *ngIf="modForm.get('description')?.invalid && modForm.get('description')?.touched"
+           class="text-danger text-sm">
+        <div *ngIf="modForm.get('description')?.errors?.['required']">Description is required</div>
+        <div *ngIf="modForm.get('description')?.errors?.['minlength']">Description must be at least 10 characters</div>
+      </div>
+    </div>
+
+    <!-- Privacy Field -->
+    <div class="row px-5">
+      <div class="d-flex align-items-center col-6">
+        <input id="isPrivate" type="checkbox" formControlName="isPrivate">
+        <label for="isPrivate" class="ml-2 block text-sm text-gray-900">Hỗ trợ server lậu</label>
+      </div>
+      <div class="d-flex align-items-center col-6">
+        <label for="categoryId" class="text-sm w-100 text-end me-3">Cho thiết bị</label>
+        <select id="categoryId" formControlName="categoryId" class="form-control">
+          <option value="1">Android</option>
+          <option value="2">Window</option>
+          <option value="3">Java</option>
+          <option value="4">IOS</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- URLs Field -->
+    <div class="d-flex justify-content-center align-items-center">
+      <div class="url-upload">
+        <label class="block text-sm">Đính kèm link tải (Tối đa 3 link)</label>
+        <div class="mt-1" formArrayName="urls">
+          <div *ngFor="let urlGroup of urlControls; let i = index" [formGroupName]="i" class="d-flex gap-2">
+            <input
+              type="url"
+              formControlName="url"
+              [readonly]="!urlGroup.get('isEditable')?.value"
+              [class.bg-secondary-light]="!urlGroup.get('isEditable')?.value"
+              class="form-control shadow-none my-1 py-0"
+              placeholder="https://example.com"
+            >
+            <button
+              *ngIf="urlGroup.get('id')?.value !== 0"
+              type="button"
+              (click)="toggleEditUrl(i)"
+              class="btn my-2 py-1"
+              [class.btn-secondary]="!urlGroup.get('isEditable')?.value"
+              [class.btn-primary]="urlGroup.get('isEditable')?.value"
+            >
+              {{ urlGroup.get('isEditable')?.value ? 'Hủy' : 'Sửa' }}
+            </button>
+            <button
+              *ngIf="urlControls.length > 1"
+              type="button"
+              (click)="removeUrl(i)"
+              class="btn btn-danger my-2 py-1">
+              Remove
+            </button>
+          </div>
+        </div>
+        <button
+          *ngIf="canAddMoreUrls"
+          type="button"
+          (click)="addUrl()"
+          class="btn btn-primary my-2 py-1">
+          Add URL
+        </button>
+        <div *ngIf="!canAddMoreUrls" class="mt-2 text-sm text-gray-500">
+          Tối đa 3 link tải
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Submit Button -->
+    <div class="float-end mb-2">
+      <a class="btn btn-secondary me-2 py-1 " routerLink="/download/{{id}}">Hủy bỏ</a>
+      <button
+        type="submit"
+        [disabled]="modForm.invalid || isSaving"
+        class="btn-primary btn py-1 me-3">
+        <span *ngIf="!isLoading">Lưu</span>
+        <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2"
+              role="status" aria-hidden="true"></span>
+      </button>
+
+    </div>
+  </form>
+</div>

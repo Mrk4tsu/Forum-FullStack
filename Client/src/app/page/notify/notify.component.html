@@ -1,0 +1,19 @@
+<form class="post-create" [formGroup]="form" (ngSubmit)="createNotify()">
+  <input type="text" placeholder="Tạo thông báo" name="title" formControlName="title"
+         class="form-control shadow-none rounded-0">
+  <div class="main-container">
+    <div class="editor-container editor-container_classic-editor" #editorContainerElement>
+      <div class="editor-container__editor">
+        <div #editorElement>
+          <ckeditor [editor]="ckeditor.Editor" [config]="ckeditor.config"
+                    *ngIf="ckeditor.Editor && ckeditor.config"
+                    formControlName="content"/>
+        </div>
+      </div>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary my-0 py-0 button float-end">
+    <span *ngIf="!isLoading">Đăng</span>
+    <span *ngIf="isLoading" class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+  </button>
+</form>

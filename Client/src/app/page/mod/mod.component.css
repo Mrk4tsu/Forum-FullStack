@@ -1,0 +1,78 @@
+.mod-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.list-tags {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tag-item {
+  display: inline-block;
+  background-color: var(--orange-color-dark);
+  padding: 5px 10px;
+  margin-right: 2px;
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.tag-item a {
+  color: white;
+  text-decoration: none;
+}
+
+.tag-item a i {
+  font-size: 9px;
+}
+
+.tag-item.active {
+  background-color: var(--color-hover);
+}
+
+.list-mod {
+  list-style-type: none;
+  padding: 7px;
+  margin: 0;
+  flex-grow: 1;
+}
+
+.mod-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+}
+
+.mod-item {
+  text-decoration: none;
+  color: inherit;
+  border-bottom: 0.1rem solid rgba(0, 0, 0, 0.1);
+}
+
+.mod-item img {
+  width: 35px;
+  height: 35px;
+  object-fit: contain;
+  border-radius: 5px;
+}
+
+.mod-info p,
+.mod-action p {
+  margin: 0;
+  padding: 0;
+}
+
+.new img {
+  width: 15px;
+  height: auto;
+  object-fit: contain;
+}
+
+.out-date {
+  font-style: italic;
+  margin-left: 0.3rem;
+}

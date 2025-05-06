@@ -413,8 +413,6 @@ echo "MrKatsuWebAPI/appsettings.json" >> .gitignore
 git add .gitignore
 git commit -m "Ignore appsettings.json"
 git push origin main
-*.json
-*.json
 MrKatsuWebAPI/appsettings.json
 /dist
 /tmp

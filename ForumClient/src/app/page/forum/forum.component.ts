@@ -1,5 +1,5 @@
-import {ChangeDetectorRef, Component, inject, OnInit} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {ChangeDetectorRef, Component, inject, OnInit, PLATFORM_ID} from '@angular/core';
+import {CommonModule, isPlatformBrowser} from '@angular/common';
 import {RouterLink, RouterOutlet} from '@angular/router';
 import {AuthService} from '../../shared/services/auth.service';
 import {TokenService} from '../../shared/services/token.service';
@@ -18,7 +18,7 @@ import {
 export class ForumComponent implements OnInit {
   authService = inject(AuthService)
   tokenService = inject(TokenService)
-  cdr = inject(ChangeDetectorRef)
+  isBrowser = isPlatformBrowser(inject(PLATFORM_ID))
 
   isAuthorize = false;
   userInfo: JwtPayload | null = null;
@@ -37,6 +37,19 @@ export class ForumComponent implements OnInit {
     this.authService.logout();
     this.isAuthorize = false;
     window.location.reload();
+  }
+
+  refreshToken(): void {
+    this.tokenService.refreshTokenHandle().subscribe({
+      next: (res) => {
+        if (res.success) {
+          this.tokenService.saveToken(res.data);
+          this.userInfo = this.tokenService.getUserInfoFromToken(res.data.accessToken);
+        }
+      }, error: (err) => {
+        console.log(err);
+      }
+    })
   }
 
   protected readonly claimReq = claimReq;

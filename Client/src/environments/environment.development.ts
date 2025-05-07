@@ -1,7 +1,7 @@
 export const environment = {
-  baseUrl: 'https://mrkatsu-web-api-gse2b3fvbmbff6fd.southeastasia-01.azurewebsites.net/api/',
+  baseUrl: 'https://localhost:5000/api/',
   production: false,
-  captchaKey: '0x4AAAAAAA4klYRzyn1KjvTm',
+  captchaKey: 'captcha_key',
   domain: 'localhost',
   baseDomain: 'https://gavl.io.vn',
   baseSubdomain: 'https://forum.gavl.io.vn',

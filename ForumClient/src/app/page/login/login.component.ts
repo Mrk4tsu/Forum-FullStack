@@ -19,7 +19,8 @@ export class LoginComponent {
   router = inject(Router)
   form = this.formBuilder.group({
     username: ['', Validators.required],
-    password: ['', Validators.required]
+    password: ['', Validators.required],
+    clientId: [this.tokenService.clientId],
   })
 
   isSubmitted: boolean = false;
@@ -42,7 +43,7 @@ export class LoginComponent {
         next: (res) => {
           this.isLoading = false;
           if (res.success) {
-            this.router.navigate(['/']).then();
+            this.router.navigate(['/']);
           } else this.message = res.message || 'Đăng nhập thất bại';
         }, error: (err) => {
           this.isLoading = false;

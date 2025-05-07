@@ -34,9 +34,9 @@ namespace MrKatsuWebAPI.Controllers
             return BadRequest(result);
         }
         [HttpPost("refresh-token")]
-        public async Task<IActionResult> RefreshToken(string refreshToken)
+        public async Task<IActionResult> RefreshToken(TokenRequest request)
         {
-            var result = await _authService.RefreshToken(refreshToken);
+            var result = await _authService.RefreshToken(request);
             if (result.Success) return Ok(result);
             return BadRequest(result);
         }

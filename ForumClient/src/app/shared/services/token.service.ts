@@ -1,6 +1,6 @@
 import {inject, Injectable, PLATFORM_ID} from '@angular/core';
 import {isPlatformBrowser} from '@angular/common';
-import {ACCESS_TOKEN, REFRESH_TOKEN} from '../constant';
+import {ACCESS_TOKEN, CLIENT_ID, REFRESH_TOKEN} from '../constant';
 import {CookieService} from 'ngx-cookie-service';
 import {JwtPayload, Token} from '../model/token.interface';
 import {environment} from '../../../environments/environment';
@@ -8,7 +8,6 @@ import {jwtDecode} from 'jwt-decode';
 import {BehaviorSubject, catchError, Observable, of, switchMap, tap, throwError, timer} from 'rxjs';
 import {ApiResult} from '../model/api.interface';
 import {HttpClient} from '@angular/common/http';
-import * as domain from 'node:domain';
 
 @Injectable({
   providedIn: 'root'
@@ -22,8 +21,23 @@ export class TokenService {
   private refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
   cookieService = inject(CookieService)
+  private userId: string | null = null;
+
+  private retryCount = 0;
+  private maxRetries = 3;
 
   constructor() {
+    this.initUserFromToken();
+  }
+
+  private initUserFromToken(): void {
+    const token = this.accessToken;
+    if (token) {
+      const payload = this.getUserInfoFromToken(token);
+      if (payload?.sub) {
+        this.userId = payload.sub;
+      }
+    }
   }
 
   get accessToken(): string | null {
@@ -38,23 +52,41 @@ export class TokenService {
     return null;
   }
 
+  get clientId(): string | null {
+    if (this.isBrowser)
+      return this.cookieService.get(CLIENT_ID) || '';
+    return null;
+  }
+
   saveToken(token: Token): void {
     if (this.isBrowser) {
       const refreshExpires = new Date(token.expiresAt);
+      this.cookieService.set(CLIENT_ID, token.clientId, {
+        expires: refreshExpires,
+        path: '/',
+        sameSite: "None",
+        domain: environment.domain,
+        secure: environment.production
+      })
       this.cookieService.set(ACCESS_TOKEN, token.accessToken, {
         expires: refreshExpires,
         path: '/',
-        sameSite: 'None',
+        sameSite: "None",
         domain: environment.domain,
         secure: environment.production
       });
       this.cookieService.set(REFRESH_TOKEN, token.refreshToken, {
         expires: refreshExpires,
         path: '/',
-        sameSite: 'None',
+        sameSite: "None",
         domain: environment.domain,
         secure: environment.production
       });
+
+      const payload = this.getUserInfoFromToken(token.accessToken);
+      if (payload?.sub) {
+        this.userId = payload.sub;
+      }
     }
   }
 
@@ -62,7 +94,9 @@ export class TokenService {
     try {
       return jwtDecode<JwtPayload>(token);
     } catch (error) {
-      console.error('Invalid token', error);
+      if (!environment.production) {
+        console.error('Invalid token', error);
+      }
       return null;
     }
   }
@@ -71,34 +105,71 @@ export class TokenService {
     if (this.isBrowser) {
       this.cookieService.delete(ACCESS_TOKEN, '/', environment.domain, environment.production, 'None');
       this.cookieService.delete(REFRESH_TOKEN, '/', environment.domain, environment.production, 'None');
+      this.cookieService.delete(CLIENT_ID, '/', environment.domain, environment.production, 'None');
+
+      this.userId = null;
     }
   }
 
-  refreshTokenHandle(): Observable<ApiResult<Token>> {
-    if (!this.refreshToken) {
+  refreshTokenHandle(isRetry = false): Observable<ApiResult<Token>> {
+    if (!isRetry) {
+      this.retryCount = 0;
+    }
+
+    if (!this.isBrowser) {
+      return throwError(() => new Error('Not running in a browser environment'));
+    }
+
+    const token = this.refreshToken;
+    const clientId = this.clientId;
+
+    if (!token) {
       this.clearToken();
       return throwError(() => new Error('No refresh token available'));
     }
 
-    const token = this.refreshToken
-    const baseUrl = environment.baseUrl;
-    let retryCount = 0;
-    const maxRetries = 3;
+    if (!clientId) {
+      this.clearToken();
+      return throwError(() => new Error('No client ID available'));
+    }
 
-    return this.http.post<ApiResult<Token>>(`${baseUrl}auth/refresh-token?refreshToken=${token}`, {}).pipe(
+    if (!this.userId) {
+      this.clearToken();
+      return throwError(() => new Error('No user ID available'));
+    }
+
+    const baseUrl = environment.baseUrl;
+
+    const tokenRequest: TokenRequest = {
+      refreshToken: token,
+      clientId: clientId,
+      userId: this.userId
+    };
+
+    return this.http.post<ApiResult<Token>>(`${baseUrl}auth/refresh-token`, tokenRequest).pipe(
       tap((response) => {
         if (response.success && response.data) {
           this.saveToken(response.data);
+          // Reset counter sau khi thành công
+          this.retryCount = 0;
         }
       }),
       catchError((error) => {
-        retryCount++;
-        if (retryCount <= maxRetries) {
+        this.retryCount++;
+        if (this.retryCount <= this.maxRetries) {
+          if (!environment.production) {
+            console.log(`Retry attempt ${this.retryCount} of ${this.maxRetries}`);
+          }
           return timer(1500).pipe(
-            switchMap(() => this.refreshTokenHandle())
+            switchMap(() => this.refreshTokenHandle(true))
           );
         }
+        if (!environment.production) {
+          console.log(`Maximum retries (${this.maxRetries}) reached`);
+        }
         this.clearToken();
+        this.retryCount = 0;
+        window.location.reload()
         return throwError(() => error);
       })
     );
@@ -144,5 +215,17 @@ export class TokenService {
       username: decoded.unique_name,
       role: decoded.typ
     };
+  }
+}
+
+export class TokenRequest {
+  refreshToken: string;
+  clientId: string;
+  userId: string;
+
+  constructor(refreshToken: string, clientId: string, userId: string) {
+    this.refreshToken = refreshToken;
+    this.clientId = clientId;
+    this.userId = userId;
   }
 }

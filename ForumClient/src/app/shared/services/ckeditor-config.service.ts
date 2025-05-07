@@ -4,8 +4,8 @@ import { ClassicEditor, EditorConfig } from 'ckeditor5';
 import { isPlatformBrowser } from '@angular/common';
 import { log } from 'console';
 
-const LICENSE_KEY ='key ckeditor 5'
-const cloudConfig = {
+const LICENSE_KEY = 'key ckeditor 5'
+    const cloudConfig = {
     version: '44.1.0',
     translations: ['vi']
 } satisfies CKEditorCloudConfig;

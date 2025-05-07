@@ -1,6 +1,7 @@
 export interface Token {
   accessToken: string;
   refreshToken: string;
+  clientId: string;
   expiresAt: string
 }
 

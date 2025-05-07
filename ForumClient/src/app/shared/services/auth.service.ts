@@ -17,8 +17,8 @@ export class AuthService {
   login(form: any): Observable<ApiResult<Token>> {
     return this.http.post<ApiResult<Token>>(this.apiUrl + '/login', form).pipe(
       tap((res) => {
-        this.tokenService.clearToken();
         if (res.success) {
+          console.log(res.data);
           this.tokenService.saveToken(res.data);
         }
       })

@@ -26,7 +26,7 @@ namespace MrKatsuWebAPI.Application.Tokens
             _userManager = userManager;
             _logger = logger;
         }
-        public async Task<TokenResponse> GenerateJwtToken(AppUser user)
+        public async Task<TokenResponse> GenerateJwtToken(AppUser user, string clientId)
         {
             var roles = await _userManager.GetRolesAsync(user);
             var claims = new[]
@@ -46,37 +46,45 @@ namespace MrKatsuWebAPI.Application.Tokens
                 claims: claims,
                 expires: DateTime.UtcNow.AddMinutes(_jwtSettings.ExpiryMinutes),
                 signingCredentials: creds);
-            //Log thời gian hết hạn của Token
+
             _logger.LogInformation($"Date time now: {DateTime.UtcNow.ToString("hh mm ss")}");
             _logger.LogInformation($"Token expires at: {token.ValidTo}");
 
             var refreshToken = Guid.NewGuid().ToString();
 
-            var cacheKey = $"refresh-token:{refreshToken}";
-            var cacheValue = user.Id.ToString();
-            await _redisService.SetAsync(cacheKey, cacheValue, TimeSpan.FromDays(_jwtSettings.RefreshExpiryDays));
+            await SaveRefreshToken(user.Id, clientId, refreshToken);
 
             var tokenResponse = new TokenResponse
             {
                 AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
                 RefreshToken = refreshToken,
+                ClientId = clientId,
                 ExpiresAt = DateTime.UtcNow.AddDays(_jwtSettings.RefreshExpiryDays),
             };
             return tokenResponse;
         }
         public string GenerateRefreshToken() => Guid.NewGuid().ToString();
-        public async Task<TokenResponse> RefreshTokenAsync(string refreshToken)
+        public async Task SaveRefreshToken(int userId, string clientId, string newRefreshToken)
         {
-            var cacheKey = $"refresh-token:{refreshToken}";
-            var userId = await _redisService.GetAsync(cacheKey);
-            if (string.IsNullOrEmpty(userId))
+            var cacheKey = $"refresh-token:{userId}:{clientId}";
+            //Xóa refresh token cũ nếu có
+            if (await _redisService.KeyExist(cacheKey))
+            {
+                await _redisService.RemoveValue(cacheKey);
+            }
+            await _redisService.SetAsync(cacheKey, newRefreshToken, TimeSpan.FromDays(_jwtSettings.RefreshExpiryDays));
+        }
+        public async Task<TokenResponse> RefreshTokenAsync(TokenRequest request)
+        {
+            var cacheKey = $"refresh-token:{request.UserId}:{request.ClientId}";
+            bool flag = await _redisService.KeyExist(cacheKey);
+            if (!flag)
                 return null;
-            var user = await _userManager.FindByIdAsync(userId);
+            var user = await _userManager.FindByIdAsync(request.UserId.ToString());
             if (user == null)
                 return null;
-            await _redisService.RemoveValue(cacheKey);
-            var newToken = await GenerateJwtToken(user);
 
+            var newToken = await GenerateJwtToken(user, request.ClientId);
             return newToken;
         }
         public async Task RemoveToken(string refreshToken)

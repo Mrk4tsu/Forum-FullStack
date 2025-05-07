@@ -45,7 +45,6 @@ export class NotificationComponent implements OnInit {
   ngOnInit() {
     this.loadTopicDetail(this.id!);
     this.isAuthorize = this.authService.isAuthenticated();
-    console.log('NotificationComponent initialized', this.isAuthorize);
   }
 
   loadTopicDetail(topicId: number): void {

@@ -32,7 +32,8 @@ namespace MrKatsuWebAPI.Application.Systems
             if (result.Succeeded)
             {
                 var user = await _userManager.FindByNameAsync(model.Username);
-                var token = await _tokenService.GenerateJwtToken(user!);
+                model.ClientId = string.IsNullOrEmpty(model.ClientId) ? Guid.NewGuid().ToString() : model.ClientId;
+                var token = await _tokenService.GenerateJwtToken(user!, model.ClientId);
                 return new ApiSuccessResult<TokenResponse>(token);
             }
 
@@ -57,9 +58,9 @@ namespace MrKatsuWebAPI.Application.Systems
             string[] errors = result.Errors.Select(e => e.Description).ToArray();
             return new ApiErrorResult<string>(errors);
         }
-        public async Task<ApiResult<TokenResponse>> RefreshToken(string refreshToken)
+        public async Task<ApiResult<TokenResponse>> RefreshToken(TokenRequest request)
         {
-            var token = await _tokenService.RefreshTokenAsync(refreshToken);
+            var token = await _tokenService.RefreshTokenAsync(request);
             if(token == null)
             {
                 return new ApiErrorResult<TokenResponse>("Refresh token không hợp lệ");

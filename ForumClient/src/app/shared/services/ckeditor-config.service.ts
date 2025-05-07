@@ -4,9 +4,8 @@ import { ClassicEditor, EditorConfig } from 'ckeditor5';
 import { isPlatformBrowser } from '@angular/common';
 import { log } from 'console';
 
-const LICENSE_KEY =
-    'eyJhbGciOiJFUzI1NiJ9.eyJleHAiOjE3NjU5Mjk1OTksImp0aSI6IjE0YTJlODgwLTY5NjEtNDk1Ni05MGJiLWRhOWQyMTRhZTdjMiIsInVzYWdlRW5kcG9pbnQiOiJodHRwczovL3Byb3h5LWV2ZW50LmNrZWRpdG9yLmNvbSIsImRpc3RyaWJ1dGlvbkNoYW5uZWwiOlsiY2xvdWQiLCJkcnVwYWwiXSwiZmVhdHVyZXMiOlsiRFJVUCIsIkJPWCJdLCJ2YyI6ImU4NjBiOTIxIn0.MOCFS5Hh0ctp8a8ovvpTxYrVsNbTpzxSnl5qiw-uwmmjQ8sz-yw7T0Qj9pmrANpSgMDAsyFTivbjq7URckTu6g';
-const cloudConfig = {
+const LICENSE_KEY = 'key ckeditor 5'
+    const cloudConfig = {
     version: '44.1.0',
     translations: ['vi']
 } satisfies CKEditorCloudConfig;

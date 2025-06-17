@@ -129,6 +129,8 @@ Trong dự án, tôi sử dụng các công nghệ như sau:
 Front End:
 Trong phần environment, captchaKey sẽ giống với SiteKey Cloudflare của Back End, phần SiteKey phía Back end không quan trọng lắm nhưng ở Front End thì sẽ quan trọng, nó dùng để gửi yêu cầu tới server xác thực request
 
+----------------------------------------------   
+
 Lưu ý:
 Trong lớp <code>AppDbContextFactory</code> trong <code>MrKatsuWebAPI.DataAccess</code>, sẽ có 2 lỗi vô tình xuất hiện:
 

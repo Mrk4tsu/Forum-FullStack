@@ -129,3 +129,17 @@ Trong dự án, tôi sử dụng các công nghệ như sau:
 Front End:
 Trong phần environment, captchaKey sẽ giống với SiteKey Cloudflare của Back End, phần SiteKey phía Back end không quan trọng lắm nhưng ở Front End thì sẽ quan trọng, nó dùng để gửi yêu cầu tới server xác thực request
 
+Lưu ý:
+Trong lớp <code>AppDbContextFactory</code> trong <code>MrKatsuWebAPI.DataAccess</code>, sẽ có 2 lỗi vô tình xuất hiện:
+
+1.
+```
+'IConfigurationBuilder' does not contain a definition for 'AddJsonFile' and no accessible extension method 'AddJsonFile' accepting a first argument of type 'IConfigurationBuilder' could be found (are you missing a using directive or an assembly reference?)
+```
+Lỗi xảy ra khi dự án thiếu thư viện <code>Microsoft.Extensions.Configuration.Json</code>
+
+2. 
+```
+'ConfigurationBuilder' does not contain a definition for 'SetBasePath' and no accessible extension method 'SetBasePath' accepting a first argument of type 'ConfigurationBuilder' could be found (are you missing a using directive or an assembly reference?)
+```
+Lỗi xảy ra khi dự án thiếu thư viện <code>Microsoft.Extensions.Configuration.FileExtensions</code>
